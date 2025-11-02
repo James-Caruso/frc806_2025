@@ -21,23 +21,17 @@ public class DriveFieldRelative extends Command {
     swerve = drive;
     controller = driveController;
     addRequirements(swerve);
-
   }
-
   @Override
   public String getName() {
     return "DriveFieldRelative";
   }
-
   @Override
   public void execute() {
      if(controller.start().getAsBoolean()){
       swerve.resetGyro();
     }
-
-
     double x = controller.getLeftX(), y = controller.getLeftY(), theta = controller.getRightX();
-    
     if (Math.hypot(x, y) < Constants.controllerDeadband) {
       x = 0;
       y = 0;
@@ -45,11 +39,9 @@ public class DriveFieldRelative extends Command {
     if (Math.abs(theta) < Constants.controllerDeadband) {
       theta = 0.0;
     }
-
     x = (x > 0) ? Math.abs(Math.pow(x, translationPow)) : -Math.abs(Math.pow(x, translationPow));
     y = (y > 0) ? Math.abs(Math.pow(y, translationPow)) : -Math.abs(Math.pow(y, translationPow));
     theta = (theta > 0) ? Math.abs(Math.pow(theta, rotationPow)) : -Math.abs(Math.pow(theta, rotationPow));
-
     double slowModeFactor = (controller.getLeftTriggerAxis() * Constants.Drivetrain.SlowFactor) + Constants.Drivetrain.SlowFactorOffset;
     boolean isCosineCompensated = controller.getRightTriggerAxis() >= 0.5;
 
