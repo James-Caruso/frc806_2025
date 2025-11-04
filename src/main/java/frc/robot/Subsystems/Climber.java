@@ -1,20 +1,16 @@
 package frc.robot.Subsystems;
-
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
-
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-
 public class Climber extends SubsystemBase {
     SparkFlex driveMotor;
-
     public Climber(int driveMotorID) {
         driveMotor = new SparkFlex(driveMotorID, MotorType.kBrushless);
         SparkMaxConfig driveConfig = new SparkMaxConfig();
@@ -25,28 +21,23 @@ public class Climber extends SubsystemBase {
         //driveConfig.softLimit.forwardSoftLimit(-8);
         //driveConfig.softLimit.reverseSoftLimitEnabled(true);
         //driveConfig.softLimit.reverseSoftLimit(-150);
-        
         driveMotor.configure(driveConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
-
     public Command climbCommand() {
         return this.startEnd(
             () -> { driveMotor.set(Constants.Climber.ClimbSpeed); },
             () -> { driveMotor.stopMotor(); }
         );
     }
-
     public Command releaseCommand() {
         return this.startEnd(
             () -> { driveMotor.set(Constants.Climber.ReleaseSpeed); },
             () -> { driveMotor.stopMotor(); }
         );
     }
-
     public void disable() {
         driveMotor.disable();
     }
-
     @Override
     public void initSendable(SendableBuilder builder) {
         builder.setSmartDashboardType("");
