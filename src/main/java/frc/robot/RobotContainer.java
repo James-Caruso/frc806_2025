@@ -1,9 +1,7 @@
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
-
 package frc.robot;
-
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -12,19 +10,13 @@ import frc.robot.Subsystems.Climber;
 import frc.robot.Subsystems.CoralHandler.CoralHandler;
 import frc.robot.Subsystems.DrivetrainSubsystem;
 import frc.robot.Subsystems.Processor;
-
 public class RobotContainer {
-
   //private Robot robot;
-
-  
   private final Climber climber = new Climber(Constants.Climber.MotorID);
   private final CoralHandler elevator = new CoralHandler(Constants.Elevator.Lift.MotorID,Constants.Elevator.Arm.MotorID,Constants.Elevator.Intake.MotorID,Constants.Elevator.Intake.sensorPort);
   private final Processor processor = new Processor();
   public final DrivetrainSubsystem drivetrain = new DrivetrainSubsystem(Constants.Modules.moduleArray);
   SendableChooser<Command> m_chooser = new SendableChooser<>();
-
-
   public CommandXboxController DriveController = new CommandXboxController(0);
   CommandXboxController coDriveController = new CommandXboxController(1);
   CommandXboxController ohShitController = new CommandXboxController(2);
@@ -60,7 +52,6 @@ public class RobotContainer {
   Trigger manualA = ohShitController.a();
   Trigger manualX = ohShitController.x();
   public RobotContainer() {
-
     //robot = new_robot;
     configureBindings();
     //m_chooser.setDefaultOption("taxi", robot.taxi);
@@ -68,10 +59,8 @@ public class RobotContainer {
     //m_chooser.addOption("shoot and taxi", robot.shoot.andThen(robot.taxi));
     //SmartDashboard.putData(m_chooser);
   }
-
   private void configureBindings() {
-  //drivetrain.setDefaultCommand(new DriveFieldRelative(drivetrain, DriveController));
-  
+  //drivetrain.setDefaultCommand(new DriveFieldRelative(drivetrain, DriveController) 
   manualUp.whileTrue(elevator.manualUp());
   manualDn.whileTrue(elevator.manualDown());
   manualDpadRight.whileTrue(elevator.manualOut());
@@ -79,7 +68,6 @@ public class RobotContainer {
   manualY.whileTrue(elevator.manualIntake());
   manualA.whileTrue(elevator.manualShoot());
   manualX.whileTrue(elevator.manualSlowShoot());
-
   rt.whileTrue(elevator.intakeAndHold());
   rt.onFalse(elevator.idle());
   dpadup.onTrue(elevator.gotoL4());
@@ -92,25 +80,16 @@ public class RobotContainer {
   lb.whileTrue(processor.manualUp());
   x.whileTrue(processor.manualIn());
   b.whileTrue(processor.manualOut());
-
-
   DriverDpadUp.whileTrue(climber.climbCommand());
   DriverDpadDn.whileTrue(climber.releaseCommand());
-
     //xButton.onTrue(new IntakeSetAng(IntakeAng.Speaker));
     //yButton.onTrue(new IntakeSetAng(IntakeAng.Amp));
     //bButton.onTrue(new IntakeSetAng(IntakeAng.Extended));
-
     //ltrigger.and(noteAquired.negate())
     //  .whileTrue(new IntakeSetSpeed(IntakeSpeed.In));
     //rtrigger.and(IntakeSubsystem.getInstance()::getAtSetpoint)
     //  .whileTrue(new IntakeSetSpeed(IntakeSpeed.Out));
-
-    
-
     //dPadUp.onTrue(new ClimberExtend());
     //dPadDown.onTrue(new ClimberRetract());
-}
-
-  
+}  
 }
