@@ -1,5 +1,4 @@
 package frc.robot.Subsystems;
-
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.revrobotics.spark.SparkAbsoluteEncoder;
 import com.revrobotics.spark.SparkBase.PersistMode;
@@ -9,7 +8,6 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -18,9 +16,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-
 public class swerveModule extends SubsystemBase{
-
     //drive 
     SparkMax driveMotor;
     int driveMotorID;
@@ -41,18 +37,15 @@ public class swerveModule extends SubsystemBase{
     final double DRIVE_VELOCITY_CONVERSION = DRIVE_POSITION_CONVERSION / 60.0;
     final double STEER_POSITION_CONVERSION = 1;
     final double STEER_VELOCITY_CONVERSION = STEER_POSITION_CONVERSION / 60.0;
-
     //CONSTRUCTOR//
         public swerveModule(int driveMotorID, int steerMotorID, int encoderID, Double encoderOffsetRotations){
             this.driveMotorID = driveMotorID;
-
             //drive motor 
             driveMotor = new SparkMax(driveMotorID, MotorType.kBrushless);
             SparkMaxConfig driveConfig = new SparkMaxConfig();
             driveConfig.smartCurrentLimit(40);
             driveConfig.idleMode(IdleMode.kBrake);
             driveMotor.configure(driveConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-
             //drive encoder
             driveMotorEncoder = driveMotor.getAbsoluteEncoder();
             //steer motor
@@ -64,24 +57,19 @@ public class swerveModule extends SubsystemBase{
             // module encoder
             moduleEncoder = new CANcoder(encoderID,"Default Name");
             this.encoderOffsetRotations = encoderOffsetRotations;
-
             //controllers
             //driveController = driveMotor.getPIDController();
             //driveController.setP(Constants.Modules.SpeedKP);
             //driveController.setI(Constants.Modules.SpeedKI);
             //driveController.setD(Constants.Modules.SpeedKD);
-
             steerController = new PIDController(Constants.Modules.SteerKP, Constants.Modules.SteerKI, Constants.Modules.SteerKD);
             steerController.enableContinuousInput(0, 1);
-
         }
-
     //DRIVE//
         public void setTargetState(SwerveModuleState targetState, boolean isCosineCompensated) {
             //PID experement
             //  steerMotor.set(-steerController.calculate(getModuleAngRotations(),targetState.angle.getRotations()));
             //  driveController.setReference(targetState.speedMetersPerSecond / DRIVE_VELOCITY_CONVERSION, ControlType.kVelocity);
-
             // FUNCTIONING
             double currentAngle = getModuleAngRotations();
             steerMotor.set(-steerController.calculate(currentAngle, targetState.angle.getRotations()));
@@ -94,18 +82,15 @@ public class swerveModule extends SubsystemBase{
         public void periodic() {
             SmartDashboard.putNumber("S" + driveMotorID, getModuleAngRotations());
         }
-
         public double getModuleAngRotations(){
             return moduleEncoder.getAbsolutePosition().getValueAsDouble() - encoderOffsetRotations;
         }
-        
         public SwerveModulePosition getModulePosition() {
             return new SwerveModulePosition(
                 driveMotorEncoder.getPosition(), //FIXME i broke this sorry
                 Rotation2d.fromRotations(getModuleAngRotations())
             );  
         }
-
         public SwerveModuleState getSwerveModuleState() {
             return new SwerveModuleState(
                 driveMotorEncoder.getVelocity(), //FIXME i broke this sorry
