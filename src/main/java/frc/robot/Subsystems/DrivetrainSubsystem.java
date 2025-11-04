@@ -1,6 +1,4 @@
 package frc.robot.Subsystems;
-
-
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -18,9 +16,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import static edu.wpi.first.wpilibj2.command.Commands.waitSeconds;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-
 public class DrivetrainSubsystem extends SubsystemBase{
-
     ////
         ADIS16470_IMU IMU;
         //Pigeon2 IMU;
@@ -46,56 +42,41 @@ public class DrivetrainSubsystem extends SubsystemBase{
     //GYRO//
         public Rotation2d getGyroscopeRotation() {
             //return Rotation2d.fromDegrees(IMU.get());
-        
             return Rotation2d.fromDegrees(-IMU.getAngle(IMUAxis.kY));
             // r*eturn Rotation2d.fromDegrees(IMU.getAngle());
         }
-        
-
-
      public void calibrateGyro(){
             IMU.calibrate();   
-     }
-            
-        //    IMU.calibrate,
-        
+     }       
+        //    IMU.calibrate,  
         //}
-
         public void resetGyro(){
             IMU.reset();
-            
         }
     //DRIVING//
         public void drive(ChassisSpeeds  chassisSpeeds){
             setModuleTargetStates(chassisSpeeds, true);
         }
-
         public void driveFieldRelative(ChassisSpeeds  chassisSpeeds, boolean isCosineCompensated){
             chassisSpeeds.vxMetersPerSecond = translationXLimiter.calculate(chassisSpeeds.vxMetersPerSecond);
             chassisSpeeds.vyMetersPerSecond = translationYLimiter.calculate(chassisSpeeds.vyMetersPerSecond);
             chassisSpeeds.omegaRadiansPerSecond = rotationLimiter.calculate(chassisSpeeds.omegaRadiansPerSecond);
-
             SmartDashboard.putNumber("gyro", getGyroscopeRotation().getDegrees());
-
             setModuleTargetStates(ChassisSpeeds.fromFieldRelativeSpeeds(chassisSpeeds, getGyroscopeRotation()), isCosineCompensated);
             // setModuleTargetStates(ChassisSpeeds.fromFieldRelativeSpeeds(chassisSpeeds, getGyroscopeRotation()));
         }
-
         public void setModuleTargetStates(ChassisSpeeds chassisSpeeds, boolean isCosineCompensated) {
             SwerveModuleState[] targetStates = kinematics.toSwerveModuleStates(chassisSpeeds);
             SwerveDriveKinematics.desaturateWheelSpeeds(targetStates, Constants.attainableMaxModuleSpeedMPS);
             modules[0].setTargetState(SwerveModuleState.optimize(targetStates[0], Rotation2d.fromRotations(modules[0].getModuleAngRotations())), isCosineCompensated);
             modules[1].setTargetState(SwerveModuleState.optimize(targetStates[1], Rotation2d.fromRotations(modules[1].getModuleAngRotations())), isCosineCompensated);
             modules[2].setTargetState(SwerveModuleState.optimize(targetStates[2], Rotation2d.fromRotations(modules[2].getModuleAngRotations())), isCosineCompensated);
-            modules[3].setTargetState(SwerveModuleState.optimize(targetStates[3], Rotation2d.fromRotations(modules[3].getModuleAngRotations())), isCosineCompensated);
-    
-
+            modules[3].setTargetState(SwerveModuleState.optimize(targetStates[3], Rotation2d.fromRotations(modules[3].getModuleAngRotations())), isCosineCompensated)
         }
     //FEEDBACK//
         public SwerveModulePosition[] getModulePositions(){
             return new SwerveModulePosition[] {modules[0].getModulePosition(),modules[1].getModulePosition(),modules[2].getModulePosition(),modules[3].getModulePosition()};
         }
-
         public ChassisSpeeds getChasisSpeed(){
             return kinematics.toChassisSpeeds(
                 modules[0].getSwerveModuleState(),
@@ -115,7 +96,6 @@ public class DrivetrainSubsystem extends SubsystemBase{
                 modules[3].getSwerveModuleState()
             });
         }
-        
         public Command getAutonomousCommand() {
             //return m_chooser.getSelected();
             return Commands.deadline(
