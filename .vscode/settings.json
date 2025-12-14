@@ -1,7 +1,7 @@
 {
-  "java.configuration.updateBuildConfiguration": "automatic",
-  "java.server.launchMode": "Standard",
-  "files.exclude": {
+    "java.configuration.updateBuildConfiguration": "automatic",
+    "java.server.launchMode": "Standard",
+    "files.exclude": {
     "**/.git": true,
     "**/.svn": true,
     "**/.hg": true,
@@ -58,3 +58,4 @@
     "edu.wpi.first.math.**.struct.*",
   ]
 }
+
